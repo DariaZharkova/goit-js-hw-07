@@ -33,12 +33,24 @@ function onClick(evt) {
     return;
   }
 
-  const instance = basicLightbox.create(`
-        <img
-        src="${evt.target.dataset.source}" 
-        alt="${evt.target.alt}"
-        />
-    `);
+  const instance = basicLightbox.create(
+    `<img src="${evt.target.dataset.source}" alt="${evt.target.alt}" />`,
+    {
+      onShow: () => {
+        document.addEventListener("keydown", onImg);
+      },
+
+      onClose: () => {
+        document.removeEventListener("keydown", onImg);
+      },
+    }
+  );
+
+  function onImg(evt) {
+    if (evt.key === "Escape") {
+      instance.close();
+    }
+  }
 
   instance.show();
 }
